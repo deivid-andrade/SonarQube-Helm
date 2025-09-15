@@ -53,7 +53,7 @@ OpenShift:
 
 # Set the chart to use the latest released SonarQube Community Build
 community:
-  enabled: false
+  enabled: true
   buildNumber: "25.8.0.112029"
 
 image:
@@ -91,7 +91,7 @@ elasticsearch:
   bootstrapChecks: true
 
 service:
-  type: ClusterIP
+  type: NodePort
   externalPort: 9000
   internalPort: 9000
   labels:
@@ -159,10 +159,10 @@ httproute:
   #     port: 8080
 
 ingress:
-  enabled: false
+  enabled: true
   # Used to create an Ingress record.
   hosts:
-    - name: sonarqube.your-org.com
+    - name: sonarqube-lab.com
       # Different clouds or configurations might need /* as the default path
       # path: /
       # For additional control over serviceName and servicePort
@@ -430,7 +430,7 @@ jvmCeOpts: ""
 
 ## a monitoring passcode needs to be defined in order to get reasonable probe results
 # not setting the monitoring passcode will result in a deployment that will never be ready
-# monitoringPasscode: "define_it"
+monitoringPasscode: "define_it"
 # Alternatively, you can define the passcode loading it from an existing secret specifying the right key
 # monitoringPasscodeSecretName: "pass-secret-name"
 # monitoringPasscodeSecretKey: "pass-key"
@@ -523,14 +523,14 @@ jdbcOverwrite:
   # (DEPRECATED) Please use jdbcOverwrite.enabled instead
   # enable: false
   # If enable the JDBC Overwrite, make sure to set `postgresql.enabled=false`
-  enabled: false
+  enabled: true
   # The JDBC url of the external DB
-  jdbcUrl: "jdbc:postgresql://myPostgress/myDatabase"
+  jdbcUrl: "jdbc:postgresql://sonardb.culnsdgwmt4p.us-east-1.rds.amazonaws.com:5432/postgres"
   # The DB user that should be used for the JDBC connection
-  jdbcUsername: "sonarUser"
+  jdbcUsername: "sonar"
   # Use this if you don't mind the DB password getting stored in plain text within the values file
   # (DEPRECATED) Please use `jdbcOverwrite.jdbcSecretName` along with `jdbcOverwrite.jdbcSecretPasswordKey` instead
-  jdbcPassword: "sonarPass"
+  jdbcPassword: "Dei487655888"
   ## Alternatively, use a pre-existing k8s secret containing the DB password
   # jdbcSecretName: "sonarqube-jdbc"
   ## and the secretValueKey of the password found within that secret
@@ -545,7 +545,7 @@ jdbcOverwrite:
 ## ref: https://github.com/bitnami/charts/blob/master/bitnami/postgresql/README.md
 postgresql:
   # Enable to deploy the bitnami PostgreSQL chart
-  enabled: true
+  enabled: false
   ## postgresql Chart global settings
   # global:
   #   imageRegistry: ''
