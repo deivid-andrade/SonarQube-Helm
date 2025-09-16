@@ -1,0 +1,54 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build and Deploy Helm Chart Sonarqube
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        role-to-assume:
+          description: 'Role to assume for deployment'
+          required: true
+        EKS_CLUSTER_NAME:
+          description: 'EKS Cluster Name'
+          required: true
+        AWS_REGION:
+          description: 'AWS Region'
+          required: true
+
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  deploy-development:
+    runs-on: ubuntu-latest
+    env:
+      POSTGRESQL_PASSWORD: ${ secrets.POSTGRESQL_PASSWORD }
+      POSTGRESQL_USERNAME: ${ secrets.POSTGRESQL_USERNAME }
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+      # Runs a single command using the runners shell
+      - name: Configure credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.role-to-assume }}
+          role-session-name: GitHubActions
+          aws-region: ${{ inputs.AWS_REGION }}
+      - name: Sts GetCallerIdentity
+        id: identity
+        run: |
+          aws sts get-caller-identity
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ inputs.EKS_CLUSTER_NAME }} --region ${{ inputs.AWS_REGION }}
+      - name: Verify kubectl access
+        run: |
+          kubectl get nodes
+      - name: Deploy Sonarqube Helm Chart
+        run: |
+          helm upgrade --install -n sonarqube -f values.yaml  sonarqube sonarqube/sonarqube --create-namespace

@@ -1,4 +1,4 @@
-##Arquivo de exemplo
+Arquivo de exemplo
 subnet_ids        = ["subnet-0d016382e958e3af6", "subnet-026ae4228e4574217"]
 security_group_id = "sg-099b752a5905de62e"
 db_username       = "sonar"

@@ -1,0 +1,72 @@
+name: "Terraform Workflow"
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws-assume-role-arn:
+        type: string
+        required: true
+      aws-region:
+        type: string
+        required: true
+      POSTGRESQL_PASSWORD:
+        type: string
+        required: true
+      POSTGRESQL_USERNAME:
+        type: string
+        required: true
+      SUBNET_IDS:
+        type: string
+        required: true
+      SECURITY_GROUP_ID:
+        type: string
+        required: true
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.aws-assume-role-arn }}
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: ${{ inputs.aws-region }}
+
+      - name: Configure credentials rds
+        env:
+          db_username: ${{ inputs.POSTGRESQL_USERNAME }}
+          db_password: ${{ inputs.POSTGRESQL_PASSWORD }}
+          subnet_ids: ${{ inputs.SUBNET_IDS }}
+          security_group_id: ${{ inputs.SECURITY_GROUP_ID }}
+        run: |
+          echo "::add-mask::$db_password" 
+          echo "::add-mask::$db_username" 
+          cat <<EOF > rds-postgres/terraform.tfvars
+          subnet_ids        = [${subnet_ids}]
+          security_group_id = "${security_group_id}"
+          db_username       = "${db_username}"
+          db_password       = "${db_password}"
+          EOF
+
+      - name: Terraform Init
+        run: |
+          cd rds-postgres && terraform init
+      - name: Terraform Plan
+        run: |
+          cd rds-postgres && terraform plan -var="aws_region=${{ inputs.aws-region }}"
