@@ -70,3 +70,7 @@ jobs:
       - name: Terraform Plan
         run: |
           cd rds-postgres && terraform plan -var="aws_region=${{ inputs.aws-region }}"
+      - name: Terraform Apply
+        run: |
+          cd rds-postgres && terraform apply -auto-approve -var="aws_region=${{ inputs.aws-region }}"
+      
