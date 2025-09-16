@@ -18,6 +18,7 @@ on:
       SUBNET_IDS:
         type: string
         required: true
+        description: 'Subnet IDs (comma separated) examples: "subnet-0d016382e958e3af6,subnet-026ae4228e4574217"'
       SECURITY_GROUP_ID:
         type: string
         required: true
@@ -58,7 +59,7 @@ jobs:
           echo "::add-mask::$db_password" 
           echo "::add-mask::$db_username" 
           cat <<EOF > rds-postgres/terraform.tfvars
-          subnet_ids        = ["${subnet_ids}"]
+          subnet_ids        = [${subnet_ids}]
           security_group_id = "${security_group_id}"
           db_username       = "${db_username}"
           db_password       = "${db_password}"
