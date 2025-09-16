@@ -1,0 +1,1 @@
+aws sts assume-role --role-arn "$1" --role-session-name "$2" --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text
