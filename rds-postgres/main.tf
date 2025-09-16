@@ -2,13 +2,17 @@ provider "aws" {
   region = var.aws_region
 }
 
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
 # Subnet group com as subnets existentes
 resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "rds-subnet-group"
+  name       = "rds-subnet-group-${random_id.suffix.hex}"
   subnet_ids = var.subnet_ids
 
   tags = {
-    Name = "rds-subnet-group"
+    Name = "rds-subnet-group-${random_id.suffix.hex}"
   }
 }
 
