@@ -58,7 +58,7 @@ jobs:
           echo "::add-mask::$db_password" 
           echo "::add-mask::$db_username" 
           cat <<EOF > rds-postgres/terraform.tfvars
-          subnet_ids        = [${subnet_ids}]
+          subnet_ids        = ["${subnet_ids}"]
           security_group_id = "${security_group_id}"
           db_username       = "${db_username}"
           db_password       = "${db_password}"
