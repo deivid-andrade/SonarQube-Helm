@@ -54,7 +54,7 @@ OpenShift:
 # Set the chart to use the latest released SonarQube Community Build
 community:
   enabled: true
-  buildNumber: "25.8.0.112029"
+  buildNumber: "26.3.0.120487"
 
 image:
   repository: sonarqube
