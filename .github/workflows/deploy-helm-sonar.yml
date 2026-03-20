@@ -46,4 +46,4 @@ jobs:
           aws eks update-kubeconfig --name ${{ inputs.EKS_CLUSTER_NAME }} --region ${{ inputs.AWS_REGION }}
       - name: Deploy Sonarqube Helm Chart
         run: |
-          helm upgrade --install -n sonarqube . -f values.yaml --create-namespace
+           helm upgrade --install -n sonarqube sonarqube-ee . -f values.yaml --create-namespace
