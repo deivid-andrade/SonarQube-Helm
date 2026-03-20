@@ -7,8 +7,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment to deploy to'
       role-to-assume:
         description: 'Role to assume for deployment'
         required: true
