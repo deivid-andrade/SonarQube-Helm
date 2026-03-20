@@ -49,4 +49,4 @@ jobs:
           kubectl get nodes
       - name: Deploy Sonarqube Helm Chart
         run: |
-          helm upgrade --install -n sonarqube -f values.yaml  sonarqube sonarqube/sonarqube --create-namespace
+          helm upgrade --install -n sonarqube . -f values.yaml --create-namespace
