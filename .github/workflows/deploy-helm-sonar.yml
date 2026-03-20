@@ -9,15 +9,15 @@ on:
     inputs:
       environment:
         description: 'Environment to deploy to'
-        role-to-assume:
-          description: 'Role to assume for deployment'
-          required: true
-        EKS_CLUSTER_NAME:
-          description: 'EKS Cluster Name'
-          required: true
-        AWS_REGION:
-          description: 'AWS Region'
-          required: true
+      role-to-assume:
+        description: 'Role to assume for deployment'
+        required: true
+      EKS_CLUSTER_NAME:
+        description: 'EKS Cluster Name'
+        required: true
+      AWS_REGION:
+        description: 'AWS Region'
+        required: true
 
 permissions:
   id-token: write   # This is required for requesting the JWT
